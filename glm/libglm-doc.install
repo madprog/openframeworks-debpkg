@@ -1,0 +1,4 @@
+doc/*.pdf usr/share/doc/libglm-doc/
+doc/api/*.css usr/share/doc/libglm-doc/html/
+doc/api/*.html usr/share/doc/libglm-doc/html/
+doc/api/*.png usr/share/doc/libglm-doc/html/

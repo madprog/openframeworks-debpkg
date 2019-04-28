@@ -5,8 +5,8 @@ ARCH=amd64
 
 #FMODEX_VERSION=4.44.59
 FMODEX_VERSION=4.44.64
-GLM_VERSION=
-JSON_VERSION=
+GLM_VERSION=0.9.8.5
+JSON_VERSION=3.6.1
 KISS_VERSION=
 LIBXML2_VERSION=
 POCO_VERSION=
@@ -63,7 +63,28 @@ ${FMODEX_ORIG_PKG}: always
 
 # GLM
 
-${GLM_PKG}:
+GLM_URL=https://github.com/g-truc/glm/archive/${GLM_VERSION}.tar.gz
+GLM_SHA256=80cf9958f06e5504f8df45ea14fde87411270102930be31c0a16c0da430fc920
+GLM_ORIG_PKG=libglm-${GLM_VERSION}.orig.tar.gz
+${GLM_PKG}: ${GLM_ORIG_PKG} \
+            glm/compat \
+            glm/control \
+            glm/convert_changelog \
+            glm/libglm-dev.install \
+            glm/libglm-doc.install \
+            glm/rules
+	rm -rf $(GLM_ORIG_PKG:%.orig.tar.gz=%)
+	tar xzf ${GLM_ORIG_PKG}
+	mv "$$(tar tzf ${GLM_ORIG_PKG} | head -n1 | cut -d/ -f1)" "$(GLM_ORIG_PKG:%.orig.tar.gz=%)"
+	cd "$(GLM_ORIG_PKG:%.orig.tar.gz=%)" && ln -s ../glm debian
+	cd "$(GLM_ORIG_PKG:%.orig.tar.gz=%)" && debian/convert_changelog < readme.md > debian/changelog
+	cd "$(GLM_ORIG_PKG:%.orig.tar.gz=%)" && dpkg-buildpackage -b -uc
+
+${GLM_ORIG_PKG}: always
+	[ -e "$@" ] && $(call check_sha,${GLM_SHA256},$@) || { \
+		rm -f "$@" && \
+		wget -O "$@" ${GLM_URL} && \
+		$(call check_sha,${GLM_SHA256},$@) || { rm $@ && false; }; }
 
 # JSON
 

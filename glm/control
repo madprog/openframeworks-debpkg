@@ -1,0 +1,17 @@
+Source: libglm
+Priority: optional
+Maintainer: Paul Morelle <paul@scengrafics.com>
+Build-Depends: debhelper (>= 9)
+Standards-Version: 3.9.8
+Section: libs
+Homepage: https://glm.g-truc.net/
+
+Package: libglm-doc
+Section: doc
+Architecture: all
+Description: documentation for the OpenGL Mathematics (GLM) library
+
+Package: libglm-dev
+Section: libdevel
+Architecture: any
+Description: C++ library for OpenGL GLSL type-based mathematics

@@ -1,0 +1,56 @@
+#!/usr/bin/env python3
+from datetime import datetime
+import re
+import sys
+
+re_entry_begin = re.compile(r'^#### (?:\[GLM (?P<version1>[\d.AB]+)\]\([^(]*\)|GLM (?P<version2>[\d.AB]+)) (?P<rest>.*)[-:] (?P<date>\d\d\d\d-\d\d-\d\d)$')
+re_entry_begin2 = re.compile(r'^#### \[GLM (?P<version1>[\d.AB]+) (?P<rest>.*)[-:] (?P<date>\d\d\d\d-\d\d-\d\d)\]\([^(]*\)$')
+re_ignore = re.compile(r'^-+$')
+header_format = 'libglm ({version}) stable; urgency=medium\n\n'
+signature_format = ' -- Paul Morelle <paul@scengrafics.com>  {date:%a, %d %b %Y %H:%M:%S +0000}\n\n'
+
+first_line_met = False
+current_date = None
+
+for line in sys.stdin:
+    if re_ignore.match(line):
+        continue
+
+    m = re_entry_begin.match(line)
+    if not m:
+        m = re_entry_begin2.match(line)
+    if m:
+        if first_line_met:
+            sys.stdout.write(signature_format.format(date=current_date))
+
+        version = (m.group('version1') or m.group('version2'))
+        version_suffix = ''
+
+        version_parts = version.split('.')
+        if 'A' in version_parts:
+            idx = version_parts.index('A')
+            version = '.'.join(version_parts[:idx] + ['0'] * (len(version_parts) - idx))
+            version_suffix = '~alpha' + '.'.join(version_parts[idx + 1:])
+
+        if 'B' in version_parts:
+            idx = version_parts.index('B')
+            version = '.'.join(version_parts[:idx] + ['0'] * (len(version_parts) - idx))
+            version_suffix = '~beta' + '.'.join(version_parts[idx + 1:])
+
+        rest = m.group('rest').strip()
+
+        if len(rest) > 0 and rest != 'final':
+            version_suffix = '~' + rest
+
+        version += version_suffix
+        sys.stdout.write(header_format.format(version=version))
+        current_date = datetime.strptime(m.group('date'), '%Y-%m-%d')
+        first_line_met = True
+
+    if first_line_met:
+        sys.stdout.write('  ' + line)
+
+if first_line_met:
+    if line != '\n':
+        sys.stdout.write('\n')
+    sys.stdout.write(signature_format.format(date=current_date))

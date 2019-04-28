@@ -3,6 +3,7 @@ from debian:latest
 run apt-get update && apt-get install -y --no-install-recommends \
         build-essential:native \
         ca-certificates \
+        cmake \
         debhelper \
         dpkg-dev \
         fakeroot \

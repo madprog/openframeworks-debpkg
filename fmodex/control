@@ -1,0 +1,22 @@
+Source: libfmodex
+Priority: optional
+Maintainer: Paul Morelle <paul@scengrafics.com>
+Build-Depends: debhelper (>= 9)
+Standards-Version: 3.9.8
+Section: libs
+Homepage: https://www.fmod.com/
+
+Package: libfmodex-doc
+Section: doc
+Architecture: all
+Description: Documentation for FMOD
+
+Package: libfmodex
+Section: libs
+Architecture: i386 amd64
+Description: Librairies for FMOD
+
+Package: libfmodex-dev
+Section: libdevel
+Architecture: i386 amd64
+Description: Librairies for FMOD

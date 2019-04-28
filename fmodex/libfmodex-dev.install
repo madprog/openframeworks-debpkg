@@ -1,0 +1,3 @@
+api/lib/libfmodex.so usr/lib
+api/lib/libfmodexL.so usr/lib
+api/inc/* usr/include/fmodex

@@ -1,0 +1,50 @@
+#!/usr/bin/env python3
+from datetime import datetime
+import re
+import sys
+
+re_pre_release = re.compile(r'(?: ?- )?pre (?P<pre>\d+)')
+re_entry_begin = re.compile(r'^(?P<date>\d\d/\d\d/\d\d) (?P<version>[\d.]+) (?P<rest>.*)$')
+header_format = 'libfmodex ({version}) stable; urgency=medium\n\n'
+signature_format = ' -- Paul Morelle <paul@scengrafics.com>  {date:%a, %d %b %Y %H:%M:%S +0000}\n\n'
+
+first_line_met = False
+current_date = None
+
+for line in sys.stdin:
+    m = re_entry_begin.match(line)
+    if m:
+        if first_line_met:
+            sys.stdout.write(signature_format.format(date=current_date))
+
+        rest = m.group('rest')
+        lrest = rest.lower()
+
+        version_suffix = ''
+        if 'dev' in lrest:
+            version_suffix += '~dev'
+
+        # Debian versioning considers that '~preX' comes before ''
+        # Initial internal branch releases come before a bunch of '~preX'
+        # Luckily, '~~' comes before '~preX'
+        if 'initial' in lrest and 'internal' in lrest:
+            version_suffix += '~~'
+
+        pre_m = re_pre_release.match(rest)
+        if rest.startswith('ALPHA'):
+            version_suffix += '~alpha'
+        elif pre_m:
+            version_suffix += '~pre' + pre_m.group('pre')
+
+        version = m.group("version") + version_suffix
+        sys.stdout.write(header_format.format(version=version))
+        current_date = datetime.strptime(m.group('date'), '%d/%m/%y')
+        first_line_met = True
+
+    if first_line_met:
+        sys.stdout.write('  ' + line)
+
+if first_line_met:
+    if line != '\n':
+        sys.stdout.write('\n')
+    sys.stdout.write(signature_format.format(date=current_date))

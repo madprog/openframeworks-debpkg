@@ -1,0 +1,9 @@
+*.buildinfo
+*.changes
+*.deb
+*.debhelper.log
+*.orig.tar.gz
+*.substvars
+debhelper-build-stamp
+files
+libfmodex-*/

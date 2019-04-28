@@ -1,0 +1,38 @@
+#!/usr/bin/make -f
+# See debhelper(7) (uncomment to enable)
+# output every command that modifies files on the build system.
+#export DH_VERBOSE = 1
+
+
+# see FEATURE AREAS in dpkg-buildflags(1)
+#export DEB_BUILD_MAINT_OPTIONS = hardening=+all
+
+# see ENVIRONMENT in dpkg-buildflags(1)
+# package maintainers to append CFLAGS
+#export DEB_CFLAGS_MAINT_APPEND  = -Wall -pedantic
+# package maintainers to append LDFLAGS
+#export DEB_LDFLAGS_MAINT_APPEND = -Wl,--as-needed
+
+PKGNAME_VERSION=$(subst -, ,$(notdir ${PWD}))
+PKGNAME=$(word 1,${PKGNAME_VERSION})
+VERSION=$(word 2,${PKGNAME_VERSION})
+VERSION_MAJOR=$(word 1,$(subst ., ,${VERSION}))
+
+
+%:
+	dh $@
+
+
+override_dh_auto_build:
+	if [ "${DEB_TARGET_ARCH_CPU}" = "amd64" ]; then \
+		mv api/lib/${PKGNAME}64-${VERSION}.so api/lib/${PKGNAME}.so.${VERSION}; \
+		mv api/lib/${PKGNAME}L64-${VERSION}.so api/lib/${PKGNAME}L.so.${VERSION}; \
+	else \
+		mv api/lib/${PKGNAME}-${VERSION}.so api/lib/${PKGNAME}.so.${VERSION}; \
+		mv api/lib/${PKGNAME}L-${VERSION}.so api/lib/${PKGNAME}L.so.${VERSION}; \
+	fi
+	ln -s ${PKGNAME}.so.${VERSION} api/lib/${PKGNAME}.so.${VERSION_MAJOR}
+	ln -s ${PKGNAME}L.so.${VERSION} api/lib/${PKGNAME}L.so.${VERSION_MAJOR}
+	ln -sf ${PKGNAME}.so.${VERSION} api/lib/${PKGNAME}.so
+	ln -sf ${PKGNAME}L.so.${VERSION} api/lib/${PKGNAME}L.so
+	ls -l api/lib

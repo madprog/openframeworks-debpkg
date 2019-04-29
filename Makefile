@@ -15,7 +15,7 @@ TESS2_VERSION=1.0.1
 
 FMODEX_PKG=libfmodex-dev_${FMODEX_VERSION}_${ARCH}.deb
 GLM_PKG=libglm-dev_${GLM_VERSION}_${ARCH}.deb
-JSON_PKG=libjson-dev_${JSON_VERSION}_${ARCH}.deb
+JSON_PKG=nlohmann-json-dev_${JSON_VERSION}_all.deb
 KISS_PKG=libkiss2-dev_${KISS_VERSION}_${ARCH}.deb
 LIBXML2_PKG=libxml2-dev_${LIBXML2_VERSION}_${ARCH}.deb
 POCO_PKG=libpoco-dev_${POCO_VERSION}_${ARCH}.deb
@@ -88,7 +88,27 @@ ${GLM_ORIG_PKG}: always
 
 # JSON
 
-${JSON_PKG}:
+JSON_URL=https://github.com/nlohmann/json/archive/v${JSON_VERSION}.tar.gz
+JSON_SHA256=80c45b090e40bf3d7a7f2a6e9f36206d3ff710acfa8d8cc1f8c763bb3075e22e
+JSON_ORIG_PKG=nlohmann-json-${JSON_VERSION}.orig.tar.gz
+${JSON_PKG}: ${JSON_ORIG_PKG} \
+             json/compat \
+             json/control \
+             json/convert_changelog \
+             json/nlohmann-json-dev.install \
+             json/rules
+	rm -rf $(JSON_ORIG_PKG:%.orig.tar.gz=%)
+	tar xzf ${JSON_ORIG_PKG}
+	mv "$$(tar tzf ${JSON_ORIG_PKG} | head -n1 | cut -d/ -f1)" "$(JSON_ORIG_PKG:%.orig.tar.gz=%)"
+	cd "$(JSON_ORIG_PKG:%.orig.tar.gz=%)" && ln -s ../json debian
+	cd "$(JSON_ORIG_PKG:%.orig.tar.gz=%)" && debian/convert_changelog < ChangeLog.md > debian/changelog
+	cd "$(JSON_ORIG_PKG:%.orig.tar.gz=%)" && dpkg-buildpackage -b -uc
+
+${JSON_ORIG_PKG}: always
+	[ -e "$@" ] && $(call check_sha,${JSON_SHA256},$@) || { \
+		rm -f "$@" && \
+		wget -O "$@" ${JSON_URL} && \
+		$(call check_sha,${JSON_SHA256},$@) || { rm $@ && false; }; }
 
 # KISS
 

@@ -8,3 +8,4 @@ debhelper-build-stamp
 files
 libfmodex-*/
 libglm-*/
+nlohmann-json-*/

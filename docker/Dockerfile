@@ -5,10 +5,16 @@ run apt-get update && apt-get install -y --no-install-recommends \
         ca-certificates \
         cmake \
         debhelper \
+        doxygen \
         dpkg-dev \
         fakeroot \
+        ghostscript \
+        graphviz \
         pkg-config \
         python3 \
+        re2c \
+        texlive-binaries \
+        texlive-latex-base \
         wget \
     && rm -rf /var/lib/apt-lists/*
 

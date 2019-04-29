@@ -1,0 +1,20 @@
+#!/usr/bin/make -f
+# See debhelper(7) (uncomment to enable)
+# output every command that modifies files on the build system.
+#export DH_VERBOSE = 1
+
+
+%:
+	dh $@
+
+override_dh_clean:
+	dh_clean
+	make -C doc clean
+
+override_dh_auto_test:
+	make all
+
+override_dh_auto_build:
+	make -C doc
+	rm -f doc/html/*.md5
+	rm -f doc/html/jquery.js

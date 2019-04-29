@@ -1,0 +1,41 @@
+#!/usr/bin/env python3
+from datetime import datetime
+import re
+import sys
+
+re_entry_begin = re.compile(r'^## \[v(?P<version>[\d.]+(?:-rc\d+)?)\]\([^(]*\) \((?P<date>\d\d\d\d-\d\d-\d\d)\)$')
+re_version_rc = re.compile(r'^(?P<version>[\d.]+)-rc(?P<rc>\d+)')
+header_format = 'nlohmann-json ({version}) stable; urgency=medium\n\n'
+signature_format = ' -- Paul Morelle <paul@scengrafics.com>  {date:%a, %d %b %Y %H:%M:%S +0000}\n\n'
+
+first_line_met = False
+current_date = None
+last_line_blank = False
+
+for line in sys.stdin:
+    m = re_entry_begin.match(line)
+    if m:
+        if first_line_met:
+            sys.stdout.write(signature_format.format(date=current_date))
+
+        version = m.group('version')
+
+        m_rc = re_version_rc.match(version)
+        if m_rc:
+            version = m_rc.group('version') + '~rc' + m_rc.group('rc')
+
+        sys.stdout.write(header_format.format(version=version))
+        current_date = datetime.strptime(m.group('date'), '%Y-%m-%d')
+        first_line_met = True
+
+    line_blank = not line.strip() or line.startswith(r'\* *This Change Log was')
+
+    if first_line_met and not (line_blank and last_line_blank):
+        sys.stdout.write('  ' + line)
+
+    last_line_blank = line_blank
+
+if first_line_met:
+    if not line_blank:
+        sys.stdout.write('\n')
+    sys.stdout.write(signature_format.format(date=current_date))

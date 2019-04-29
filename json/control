@@ -1,0 +1,24 @@
+Source: nlohmann-json
+Priority: optional
+Maintainer: Muri Nicanor <muri@immerda.ch>
+Build-Depends:
+ debhelper (>=9),
+ doxygen,
+ ghostscript,
+ graphviz,
+ re2c,
+ texlive-binaries,
+ texlive-latex-base,
+Standards-Version: 3.9.8
+Section: libs
+Homepage: https://nlohmann.github.io/json/
+
+Package: nlohmann-json-dev
+Section: libdevel
+Architecture: all
+Depends:
+ ${misc:Depends},
+Description: JSON for Modern C++
+ JSON library with intuitive syntax, trivial integration and serious
+ testing. Other aspects, as memory efficiency and speed were not so
+ important. The library consists of a single source file json.hpp.

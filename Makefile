@@ -8,7 +8,6 @@ FMODEX_VERSION=4.44.64
 GLM_VERSION=0.9.8.5
 JSON_VERSION=3.6.1
 KISS_VERSION=1.3.0
-LIBXML2_VERSION=
 POCO_VERSION=
 SVGTINY_VERSION=
 TESS2_VERSION=1.0.1
@@ -17,7 +16,6 @@ FMODEX_PKG=libfmodex-dev_${FMODEX_VERSION}_${ARCH}.deb
 GLM_PKG=libglm-dev_${GLM_VERSION}_${ARCH}.deb
 JSON_PKG=nlohmann-json-dev_${JSON_VERSION}_all.deb
 KISS_PKG=libkiss2-dev_${KISS_VERSION}_${ARCH}.deb
-LIBXML2_PKG=libxml2-dev_${LIBXML2_VERSION}_${ARCH}.deb
 POCO_PKG=libpoco-dev_${POCO_VERSION}_${ARCH}.deb
 SVGTINY_PKG=libsvgtiny-dev_${SVGTINY_VERSION}_${ARCH}.deb
 TESS2_PKG=libtess2-dev_${TESS2_VERSION}_${ARCH}.deb
@@ -29,7 +27,6 @@ all: \
      ${GLM_PKG} \
      ${JSON_PKG} \
      ${KISS_PKG} \
-     ${LIBXML2_PKG} \
      ${POCO_PKG} \
      ${SVGTINY_PKG} \
      ${TESS2_PKG} \
@@ -133,10 +130,6 @@ ${KISS_ORIG_PKG}: always
 		rm -f "$@" && \
 		wget -O "$@" ${KISS_URL} && \
 		$(call check_sha,${KISS_SHA256},$@) || { rm $@ && false; }; }
-
-# LIBXML2
-
-${LIBXML2_PKG}:
 
 # POCO
 

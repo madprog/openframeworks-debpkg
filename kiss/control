@@ -1,0 +1,12 @@
+Source: libkissfft
+Priority: optional
+Maintainer: Paul Morelle <paul@scengrafics.com>
+Build-Depends: debhelper (>= 9)
+Standards-Version: 3.9.8
+Section: libs
+Homepage: https://github.com/mborgerding/kissfft
+
+Package: libkissfft-dev
+Section: libdevel
+Architecture: any
+Description: A mixed-radix Fast Fourier Transform based up on the principle, "Keep It Simple, Stupid."

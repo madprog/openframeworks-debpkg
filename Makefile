@@ -7,7 +7,7 @@ ARCH=amd64
 FMODEX_VERSION=4.44.64
 GLM_VERSION=0.9.8.5
 JSON_VERSION=3.6.1
-KISS_VERSION=
+KISS_VERSION=1.3.0
 LIBXML2_VERSION=
 POCO_VERSION=
 SVGTINY_VERSION=
@@ -112,7 +112,27 @@ ${JSON_ORIG_PKG}: always
 
 # KISS
 
-${KISS_PKG}:
+KISS_URL=https://github.com/mborgerding/kissfft/archive/v$(subst .,,${KISS_VERSION}).tar.gz
+KISS_SHA256=1782cd90f036765523c72b521ecb1df321883d3cfca65097ba139ff60e696051
+KISS_ORIG_PKG=libkissfft-${KISS_VERSION}.orig.tar.gz
+${KISS_PKG}: ${KISS_ORIG_PKG} \
+             json/compat \
+             json/control \
+             json/convert_changelog \
+             json/nlohmann-json-dev.install \
+             json/rules
+	rm -rf $(KISS_ORIG_PKG:%.orig.tar.gz=%)
+	tar xzf ${KISS_ORIG_PKG}
+	mv "$$(tar tzf ${KISS_ORIG_PKG} | head -n1 | cut -d/ -f1)" "$(KISS_ORIG_PKG:%.orig.tar.gz=%)"
+	cd "$(KISS_ORIG_PKG:%.orig.tar.gz=%)" && ln -s ../kiss debian
+	cd "$(KISS_ORIG_PKG:%.orig.tar.gz=%)" && debian/convert_changelog < CHANGELOG > debian/changelog
+	cd "$(KISS_ORIG_PKG:%.orig.tar.gz=%)" && dpkg-buildpackage -b -uc
+
+${KISS_ORIG_PKG}: always
+	[ -e "$@" ] && $(call check_sha,${KISS_SHA256},$@) || { \
+		rm -f "$@" && \
+		wget -O "$@" ${KISS_URL} && \
+		$(call check_sha,${KISS_SHA256},$@) || { rm $@ && false; }; }
 
 # LIBXML2
 

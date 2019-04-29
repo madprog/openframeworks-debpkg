@@ -1,0 +1,66 @@
+#!/usr/bin/env python3
+from datetime import datetime
+import re
+import sys
+
+MONTHS_REGEXP = ('Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec|'
+                 'January|February|March|April|June|July|August|September|October|November|December')
+
+re_entry_begin = re.compile(r'(?P<version>[\d.]+)[ :]*\(?(?P<date>\d\d\d\d-\d\d-\d\d|(?:'
+                            + MONTHS_REGEXP + r') \d\d, \d\d\d\d)?\)?.*$')
+header_format = 'libkissfft ({version}) stable; urgency=medium\n\n'
+signature_format = ' -- Paul Morelle <paul@scengrafics.com>  {date:%a, %d %b %Y %H:%M:%S +0000}\n\n'
+
+# Missing from CHANGELOG (found in hg log), or not parseable easily
+VERSION_DATES = {
+    '1.2.8': '2008-08-22',
+    '1.2.7': '2007-01-07',
+    '1.2.2': '2005-05-06',
+    '1.2.1': '2004-04-04',
+    '1.1.1': '2004-02-01',
+    '1.1': '2004-01-30',
+    '0.4': '2003-11-04',
+    '0.1': '2003-05-19',
+}
+
+first_line_met = False
+current_date = None
+last_line_blank = False
+
+for line in sys.stdin:
+    m = re_entry_begin.match(line)
+    if m:
+        if first_line_met:
+            sys.stdout.write(signature_format.format(date=current_date))
+
+        version = m.group('version')
+
+        sys.stdout.write(header_format.format(version=version))
+
+        date = m.group('date')
+        if date is None:
+            date = VERSION_DATES[version]
+
+        current_date = None
+        for date_format in ('%Y-%m-%d', '%b %d, %Y', '%B %d, %Y'):
+            try:
+                current_date = datetime.strptime(date, date_format)
+                break
+            except ValueError:
+                continue
+        if current_date is None:
+            raise ValueError('Date {} does not match any date format in {!r}'
+                             .format(date, date_formats))
+        first_line_met = True
+
+    line_blank = not line.strip() or line.startswith(r'\* *This Change Log was')
+
+    if first_line_met and not (line_blank and last_line_blank):
+        sys.stdout.write('  ' + line)
+
+    last_line_blank = line_blank
+
+if first_line_met:
+    if not line_blank:
+        sys.stdout.write('\n')
+    sys.stdout.write(signature_format.format(date=current_date))

@@ -1,0 +1,4 @@
+COPYING usr/share/doc/libkissfft-dev
+libkissfft.a usr/lib
+kiss_fft.h usr/include
+tools/kiss_fftr.h usr/include

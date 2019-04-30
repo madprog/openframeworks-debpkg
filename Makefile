@@ -113,11 +113,11 @@ KISS_URL=https://github.com/mborgerding/kissfft/archive/v$(subst .,,${KISS_VERSI
 KISS_SHA256=1782cd90f036765523c72b521ecb1df321883d3cfca65097ba139ff60e696051
 KISS_ORIG_PKG=libkissfft-${KISS_VERSION}.orig.tar.gz
 ${KISS_PKG}: ${KISS_ORIG_PKG} \
-             json/compat \
-             json/control \
-             json/convert_changelog \
-             json/nlohmann-json-dev.install \
-             json/rules
+             kiss/compat \
+             kiss/control \
+             kiss/convert_changelog \
+             kiss/libkissfft-dev.install \
+             kiss/rules
 	rm -rf $(KISS_ORIG_PKG:%.orig.tar.gz=%)
 	tar xzf ${KISS_ORIG_PKG}
 	mv "$$(tar tzf ${KISS_ORIG_PKG} | head -n1 | cut -d/ -f1)" "$(KISS_ORIG_PKG:%.orig.tar.gz=%)"

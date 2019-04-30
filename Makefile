@@ -8,14 +8,14 @@ FMODEX_VERSION=4.44.64
 GLM_VERSION=0.9.8.5
 JSON_VERSION=3.6.1
 KISS_VERSION=1.3.0
-POCO_VERSION=
+POCO_VERSION=1.9.0-5
 SVGTINY_VERSION=
 TESS2_VERSION=1.0.1
 
 FMODEX_PKG=libfmodex-dev_${FMODEX_VERSION}_${ARCH}.deb
 GLM_PKG=libglm-dev_${GLM_VERSION}_${ARCH}.deb
 JSON_PKG=nlohmann-json-dev_${JSON_VERSION}_all.deb
-KISS_PKG=libkiss2-dev_${KISS_VERSION}_${ARCH}.deb
+KISS_PKG=libkissfft-dev_${KISS_VERSION}_${ARCH}.deb
 POCO_PKG=libpoco-dev_${POCO_VERSION}_${ARCH}.deb
 SVGTINY_PKG=libsvgtiny-dev_${SVGTINY_VERSION}_${ARCH}.deb
 TESS2_PKG=libtess2-dev_${TESS2_VERSION}_${ARCH}.deb
@@ -133,7 +133,21 @@ ${KISS_ORIG_PKG}: always
 
 # POCO
 
-${POCO_PKG}:
+POCO_URL=https://salsa.debian.org/debian/poco/-/archive/debian/${POCO_VERSION}/poco-debian-${POCO_VERSION}.tar.gz
+POCO_SHA256=8e6f6f4df9d0ad6cdc77e80452f2affb816922341bc446ff31668048292d79f1
+POCO_ORIG_PKG=poco-${POCO_VERSION}.orig.tar.gz
+${POCO_PKG}: ${POCO_ORIG_PKG}
+	rm -rf $(POCO_ORIG_PKG:%.orig.tar.gz=%)
+	tar xzf ${POCO_ORIG_PKG}
+	mv "$$(tar tzf ${POCO_ORIG_PKG} | head -n1 | cut -d/ -f1)" "$(POCO_ORIG_PKG:%.orig.tar.gz=%)"
+	cd "$(POCO_ORIG_PKG:%.orig.tar.gz=%)" && patch -p1 < ../poco/debhelper_11_to_9.patch
+	cd "$(POCO_ORIG_PKG:%.orig.tar.gz=%)" && dpkg-buildpackage -b -uc
+
+${POCO_ORIG_PKG}: always
+	[ -e "$@" ] && $(call check_sha,${POCO_SHA256},$@) || { \
+		rm -f "$@" && \
+		wget -O "$@" ${POCO_URL} && \
+		$(call check_sha,${POCO_SHA256},$@) || { rm $@ && false; }; }
 
 # SVGTINY
 

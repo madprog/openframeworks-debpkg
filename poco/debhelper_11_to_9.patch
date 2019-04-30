@@ -1,0 +1,26 @@
+--- a/debian/compat	2018-10-13 22:06:42.000000000 +0200
++++ b/debian/compat	2019-04-29 18:46:51.865882705 +0200
+@@ -1 +1 @@
+-11
++9
+--- a/debian/control	2018-10-13 22:06:42.000000000 +0200
++++ b/debian/control	2019-04-29 18:46:51.865882705 +0200
+@@ -2,7 +2,7 @@
+ Priority: optional
+ Maintainer: Krzysztof Burghardt <krzysztof@burghardt.pl>
+ Uploaders: Patrick Gansterer <paroga@paroga.com>, Cristian Greco <cristian@debian.org>, Jochen Sprickerhof <jspricke@debian.org>
+-Build-Depends: debhelper (>= 11),
++Build-Depends: debhelper (>= 9),
+                cmake,
+                libexpat1-dev,
+                default-libmysqlclient-dev,
+@@ -11,8 +11,7 @@
+                libssl-dev,
+                unixodbc-dev,
+                zlib1g-dev
+-Standards-Version: 4.2.0
+-Rules-Requires-Root: no
++Standards-Version: 3.9.8
+ Section: libs
+ Homepage: https://pocoproject.org/
+ Vcs-Browser: https://salsa.debian.org/debian/poco

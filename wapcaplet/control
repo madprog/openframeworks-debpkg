@@ -1,0 +1,18 @@
+Source: libwapcaplet
+Priority: optional
+Maintainer: Paul Morelle <paul@scengrafics.com>
+Build-Depends: debhelper (>= 9),
+ check
+Standards-Version: 3.9.8
+Section: libs
+Homepage: http://git.netsurf-browser.org/libwapcaplet.git/
+
+Package: libwapcaplet-dev
+Section: libdevel
+Architecture: any
+Description: String internment library
+ LibWapcaplet provides a reference counted string internment system
+ designed to store small strings and allow rapid comparison of them in
+ terms of equality. It supports a caseless comparison where it will
+ automatically intern a lowercased variant of the string and use that
+ for comparison if needed.

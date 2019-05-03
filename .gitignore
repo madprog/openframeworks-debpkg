@@ -6,8 +6,14 @@
 *.substvars
 debhelper-build-stamp
 files
+libdom-*/
 libfmodex-*/
 libglm-*/
+libhubbub-*/
 libkissfft-*/
+libparserutils-*/
+libsvgtiny-*/
+libwapcaplet-*/
+netsurf-buildsystem-*/
 nlohmann-json-*/
 poco-*/

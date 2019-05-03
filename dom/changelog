@@ -1,0 +1,199 @@
+libdom (0.3.3) stable; urgency=medium
+
+  - Fix m68k cross-compile warnings.
+  - DOMTSHandler: Ensure HTMLOptionsCollection is unreffed.
+  - HTMLTableRow.insertCell: Fix refcounting and error paths.
+  - HTMLTableElement.deleteRow: Squash leaks and fix error paths.
+  - HTMLDocument: Squash leaks of document.documentElement.
+  - HTMLDocument.body: Squash leak of node list.
+  - HTMLCollection.namedItem: Squash leak of id_name.
+  - dom_html_table_row_element_get_row_index: Squash t_head node leak.
+  - HTMLTableElement.insertRow: Fix lifetimes and error handling.
+  - HTMLTableSectionElement.insertRow: Fix lifetimes and error handling.
+  - Cleanups in the DOMTS should be safe
+  - More cleanup for iterating in test suite
+  - Various extra cleanups in list implementation for test suite
+  - Make API note that unreffing is up to the caller for dom_nodelist_item()
+  - Unref nodes properly in foreach
+  - Clean up nodes and lists
+  - Update libdom python gdb to python 3
+  - Ensure we clean up if load_html fails in the test runner
+  - Correct COLLECT logic in walk_logic_adjacent_text_in_order to stop leak
+  - README: Document testsuite requirement.
+
+ -- Vincent Sanders <vince@kyllikki.org>  Wed, 22 Aug 2018 14:33:38 +0100
+
+libdom (0.3.2) stable; urgency=medium
+
+  - Unregister all instances of a listener
+       Sometimes we register a listener a lot on an event target. This change
+       allows us to pass NULL as the event type to the remove call in order to
+       remove every instance of the given listener, regardless of event type
+       and capture vs. bubble.
+  - Change dom node type count to last value plus one.
+  - Ignore http and https addresses when fetching entity refs
+       The fopen() causes a requester on AmigaOS which I'm bored of hearing
+       about. See also bug 2313
+  - Add getter/setter for event_target's is_trusted
+  - Add an is_initialised flag to events
+  - Add support to retrieve if an event is in dispatch
+
+ -- Vincent Sanders <vince@kyllikki.org>  Fri, 13 Oct 2017 09:50:44 +0100
+
+libdom (0.3.1) stable; urgency=medium
+
+  - DOM Document: Fix find by ID, when called with global tree root.
+       Fixes: NetSurf bug #2466.
+  - Slightly better fix for afl issues
+  - fix expat parser adding comment if no node is being constructed
+  - protect expat parser from null current node
+  - Revert "Don't attempt to fetch external entity references blindly with fopen"
+       It appears that this change broke the libdom tests because they expect
+       to be able to load relative paths, and thus will not work without some
+       external entity ref fetching system.
+       Therefore this external entity reference fetching problem will need to
+       have a proper fix written to resolve #2313 and avoid the security
+       implications of not taking the base URI into account.
+       This reverts commit 389f74b11d3f6cd54c32ffcf423cee1c9b07f845.
+  - Don't attempt to fetch external entity references blindly with fopen
+       The system_id is a URI, either absolute or relative to 'base', it needs
+       to be fetched using network calls, fopen won't work.
+       I've put a half-working POC in chris/fetch-x-ent-ref but it needs
+       fixing up and testing.
+       Removing this non-working code fixes #2313 for now, but fetching of
+       external entities will still need to be added.
+
+ -- Daniel Silverstone <dsilvers@digital-scurf.org>  Sat, 19 Nov 2016 09:20:47 +0000
+
+libdom (0.3.0) stable; urgency=medium
+
+  - Fix Coverity #1350096.
+  - Fix compiler warning.
+       error: expression result unused [-Werror,-Wunused-value]
+  - make unused variable macro more portable in expat binding
+  - make unused variable macro more portable in hubbub binding
+  - make unused variable macro more portable
+  - Fix HTML element copy constructors
+  - Add CENTER to list of HTML elements.
+  - Add full list of HTML5 elements to enum.
+       There is a TODO in the code, indicating the set of unimplemented
+       HTMLElement specialisations.  For now they fall back to HTMLElement.
+  - Sort HTML elements to make it easier to see what's there.
+  - Optimise dom_string_tolower where interned string was already lower case.
+       Now we detect that the string was lower case, and return a new ref to
+       the same dom_string.
+  - Add missing newline which upsets gcc
+  - Optimise dom_string_(toupper|tolower) functions.
+       Since we don't support non-ascii strings here, the lpu calls to step
+       though the characters was an unecessary overhead.
+  - Further optimise event dispatch.
+       Only add event targets to the array of targets for capture/bubbling
+       if it is actually listening for the event type we're dispatching.
+  - Optimise event dispatch.
+       - Only allocate array of event targets when there is at least one
+         target listening.
+       - Only add targets to the list if they have got at least one
+         listener registered.
+  - Remove parameter documentation for non-existant parameter.
+  - Don't add target event to list of capture/bubbling event targets.
+  - Add function to get html element's tag type.
+  - Style: Fix indentation and tidy up.
+  - Store HTMLElement tag types as enum on the html elements.
+  - Simplified consistant interface to HTMLElement creation.
+       Also fixes STYLE element not getting the correct namespace or prefix.
+  - Fix: Pass tag_name through to HTMLQuoteElement initialiser.
+       It needs to be given the tag_name, because it could have been
+       created by a Q or BLOCKQUOTE element.
+  - Fix longstanding failure to handle HTMLDirectoryElement specialisation.
+       We were looking for DIRECTORY tags, but we should have been looking for
+       DIR elements.
+  - Optimise HTMLElement specialisation slightly.
+       Gets the byte length of the tag names string, and splits the comparison
+       ladder into ladders for different string lengths. This reduces the
+       amount of dom_string_isequal() calls we need to do.
+  - Optimise element specialisation: use non-caseless comparison in ladder.
+       We know for sure both things are upper case, so using the caseless
+       version is needlessly slow, since it will need to lowercase both (if
+       lowercase version's don't already exist) and compare the lower case
+       versions.
+  - Remove default from HTML element specialisation switch.
+       Now that everything is handled we can remove the default, and
+       it should be obvious in future if something is added to the
+       list of elements but not properly handled.
+  - Add missing detection of HTMLBaseElement specialisation.
+  - Fix up HTMLBaseElement specialisation.
+  - Add missing detection of HTMLMetaElement specialisation.
+  - Add missing detection of HTMLDivElement specialisation.
+  - Add missing specialisation of BLOCKQUOTE.
+       Both Q and BLOCKQUOTE share the HTMLQuoteElement specialisation.
+       Enable table row HTML element specialisation.
+  - The code for it was always there, but it was never reached.
+  - Split detection of HTML TAG type out into helper.
+       This moves the massive dom_string comparison ladder out into a separate
+       function, and switches on the result.
+       Using a switch here has highlighted multiple issues:
+         - Various html element specialisations were missed out.
+         - Both TD elements were in the ladder twice.
+  - Split out tag names from general string table and enum.
+       Previously these were mixed in the the document's general memoised strings.
+       This also gives us an enum by which HTML elements can be identified.
+  - Unref document uri on finalisation.
+  - Fix leak of dom string on error path.  Coverity #1347877.
+  - Create documents with initial URI of "about:blank".
+       Clients can set the URI on a document with dom_document_set_uri()
+  - Remove call to non-existant function.
+       There was no implementation of dom_document_get_base, and call to
+       it were trying to run code at 0x0.  Replace with call to
+       dom_document_get_uri instead.
+
+ -- Vincent Sanders <vince@kyllikki.org>  Tue, 16 Feb 2016 10:52:18 +0000
+
+libdom (0.2.0) stable; urgency=medium
+
+  - Ensure HTMLDocument uses Document's Node vtable so that .textContent is correct
+  - Fix event target listener destruction.
+  - Add support for Event.eventPhase
+  - Ensure we don't capture or bubble on target
+  - Remove unused document from event_listener api
+  - Tweak the types on namednodemap
+  - add async property to script element
+  - Update character data get length property to use dom unsigned long
+  - HTML element attributes get lowercased.
+  - Handle situation where we cleanup during target gathering
+  - Fix end-of-event phasing
+  - Add a _FINISHED event action callback
+       We can then use this for JS to hook cleanups into place.
+  - Update the html table cell element API to use dom_ulong where apropriate
+  - Update the html li element API to use dom_long
+  - Update the html pre element API to use dom_long
+  - Update the input element API to use dom_ulong where apropriate
+  - Update the image element API to use dom_ulong where apropriate
+  - add property getter and setter helpers for the dom_ulong type
+  - allow tests to use the unsigned long type for testing dom_ulong interfaces
+  - Update olist to use dom_long type
+  - Introduce integer types as defined in IDL specification
+  - Make HTMLDList IDL to c name mapping consistant
+  - Make HTMLOList IDL to c name mapping consistant
+  - Fix some doxygen warnings
+  - Remove invalid asserts for parameters which are no longer present.
+  - Strip doc from event layer
+  - Fix removal of event listeners.
+  - Leave top 8 bits of dom exception unused.
+  - Testutils: undef assert before use
+  - Add doxygen autogenerated documentation config
+  - Update CFLAGS to avoid deprication warning for glibc 2.21 and later.
+  - gcc2 fixes.
+  - Fix include paths for Haiku.
+
+ -- Vincent Sanders <vince@kyllikki.org>  Fri, 18 Dec 2015 11:37:15 +0000
+
+libdom (0.1.2) stable; urgency=medium
+
+  - Update to use correct BUILD/HOST variables due to buildsystem changes
+  - Ensure all the library dependancies are listed
+  - Fix up for new buildsystem
+  - Fix Doxygen
+  - Fix unref issue with html collection in applets callback. Coverity #1227072
+  - Fix resource leak with html collection creation in t_body code, Coverity #1227074
+
+ -- Vincent Sanders <vince@kyllikki.org>  Sun, 8 Mar 2015 22:22:54 +0000

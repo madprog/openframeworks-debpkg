@@ -1,0 +1,54 @@
+libparserutils (0.2.4) stable; urgency=medium
+
+  - Update componnet version for release
+  - Tests: Fix memory leak.
+  - Tests: Fix read before start of unused expected buffer.
+
+ -- Vincent Sanders <vince@kyllikki.org>  Wed Aug 22 14:25:07 2018 +0100
+
+libparserutils (0.2.3) stable; urgency=medium
+
+  - make unused variable macro more portable
+
+ -- Vincent Sanders <vince@kyllikki.org>  Tue Feb 16 08:49:51 2016 +0000
+
+libparserutils (0.2.2) stable; urgency=medium
+
+  - Update CFLAGS to avoid deprication warning for glibc 2.21 and later.
+  - Fix include directories for Haiku.
+
+ -- Vincent Sanders <vince@kyllikki.org>  Fri Dec 18 11:20:03 2015 +0000
+
+libparserutils (0.2.1) stable; urgency=medium
+
+  - Fix up for new buildsystem
+
+ -- Vincent Sanders <vince@kyllikki.org>  Sun Mar 8 19:54:46 2015 +0000
+
+libparserutils (0.2.0) stable; urgency=medium
+
+  - Fix memmove beyond buffer length in parserutlis_buffer_discard.  Thanks to Elie Roudninski.
+  - Add test for memmove beyond buffer length, in parserutils_buffer_discard.
+  - Replace use of abort() with assertions.
+  - Fix non-iconv build.
+  - add support for multilib
+  - Fix bounds checking. Fixes CID 1152178, 1152179.
+  - Fix leak.  Thanks to Ralf Junker.
+  - Remove client allocation function.
+  - Don't use the nonportable alloca() during tests.
+
+ -- Vincent Sanders <vince@kyllikki.org>  Fri Apr 18 10:35:42 2014 +0100
+
+libparserutils (0.1.2) stable; urgency=medium
+
+  - add a .gitattributes so .gitignore is not exported
+  - Fix input insertion.
+       The gap in teh input was being created at the wrong insertion point!
+  - add simple insert test when an a is found in teh input stream
+  - Update to new NSBUILD infrastructure
+  - Remove unused origlen so tests run
+  - Basic gitignore
+  - Remove dead allocation which also isn't even usefully documenting
+  - Fix iconv disablement documentation
+
+ -- Vincent Sanders <vince@kyllikki.org>  Fri Apr 19 19:06:57 2013 +0100

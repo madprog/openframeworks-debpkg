@@ -1,0 +1,16 @@
+Source: libhubbub
+Priority: optional
+Maintainer: Paul Morelle <paul@scengrafics.com>
+Build-Depends: debhelper (>= 9),
+ check,
+ libparserutils-dev,
+ libjson-c-dev
+Standards-Version: 3.9.8
+Section: libs
+Homepage: http://git.netsurf-browser.org/libhubbub.git/
+
+Package: libhubbub-dev
+Section: libdevel
+Architecture: any
+Description: HTML5 parser library
+ Hubbub is a flexible HTML parser. It aims to comply with the HTML5 specification.

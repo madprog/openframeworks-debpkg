@@ -1,0 +1,103 @@
+libwapcaplet (0.4.1) stable; urgency=medium
+
+  - Ensure that when we test unreffing a string to deletion, we don't then unref it again
+
+ -- Vincent Sanders <vince@kyllikki.org>  Tue, 21 Aug 2018 23:28:17 +0100
+
+libwapcaplet (0.4.0) stable; urgency=medium
+
+  - Enable lwc_string_caseless_hash_value function, and include stddef.h for NULL.
+  - Add function to get caseless hash value for an lwc string.
+
+ -- Daniel Silverstone <dsilvers@digital-scurf.org>  Sat, 19 Nov 2016 09:06:26 +0000
+
+libwapcaplet (0.3.0) stable; urgency=medium
+
+  - Add lwc_string_tolower() tests.
+  - Add lwc_string_tolower() API.
+  - Consistent use of tabs for indentation.
+
+ -- Vincent Sanders <vince@kyllikki.org>  Tue, 16 Feb 2016 08:47:11 +0000
+
+libwapcaplet (0.2.3) stable; urgency=medium
+
+  - Fix doxygen errors in header.
+  - Update to include asserts in interface macros, and test successfully
+  - add doxygen config for automated documentation generation
+  - Fix build with gcc 4.9.
+  - Fix typo
+  - Fix up a couple of type hiccoughs
+  - use null_lwc instead of NULL in a bunch of tests
+  - Update CFLAGS to avoid deprication warning for glibc 2.21 and later.
+  - Fix include dirs for Haiku.
+
+ -- Vincent Sanders <vince@kyllikki.org>  Fri, 18 Dec 2015 10:26:23 +0000
+
+libwapcaplet (0.2.2) stable; urgency=medium
+
+  - Fix up for new buildsystem
+
+ -- Vincent Sanders <vince@kyllikki.org>  Sun Mar 8 2015 15:45:06 +0000
+
+libwapcaplet (0.2.1) stable; urgency=medium
+
+  - add support for multilib
+  - Fix Coverity #1127059.  Dereference after NULL check.
+
+ -- Vincent Sanders <vince@kyllikki.org>  Thu, 17 Apr 2014 14:31:40 +0100
+
+libwapcaplet (0.2.0) stable; urgency=medium
+
+  - add a .gitattributes so .gitignore is not exported
+  - Update to new NSBUILD infrastructure
+  - Basic gitignore
+  - Rework the majority of wapcaplet's interface to be macros.  This removes
+       *many* function call overheads but does require GNUish braced-group
+       expressions.
+  - Remove pedantic from CFLAGS ready for wapcaplet rework
+  - Squash an unused value warning
+  - Use __ in middle of function name for statics and private functions, not _
+       as a prefix
+
+ -- Vincent Sanders <vince@kyllikki.org>  Fri, 19 Apr 2013 18:52:56 +0100
+
+libwapcaplet (0.1.1) stable; urgency=medium
+
+  - Constify lwc_string * param to lwc_string_length and lwc_string_data.
+
+ -- Vincent Sanders <vince@netsurf-browser.org>  Mon, 27 Feb 2012 13:43:26 +0000
+
+libwapcaplet (0.1.0) stable; urgency=medium
+
+  - Fix gcc2 warning: comma at end of enumerator list.
+  - Ensure we cope with no chance to opportunistically initialise the hash
+       before iteration.  Also ensure that an OOM during initialise doesn't
+       leave us at risk of doom later
+  - Fix debug build
+  - Remove initialisation, use system allocation functions. r=vince
+  - Sprinkle some C++ scoping around
+  - Add simple iteration API and also add brackets in lwc_string_isequal
+  - Simplify libwapcaplet and remove context objects.
+       Remove the lwc_context type from the API and ensure that all strings
+       belong to the one internment context.  This removes a lot of API and
+       simplifies a lot of function calls, however it does mean that clients
+       of the library *MUST* be better at reffing and unreffing strings or
+       it'll explode.
+  - -Wextra is only understood by GCC 3.4.6 or later.
+       It is a more descriptive synonym for -W.
+       Use -W instead which is understood by all common versions of GCC
+       (i.e. GCC 2.95 supports it, which is the oldest GCC version we have to
+       support)
+       Additionally, conditionalise our -Werror usage on whether we're
+       building for BeOS/Haiku. On these platforms, the standard library
+       headers result in warnings.
+       GCC 2 is quite happy to build this code on other platforms, so
+       shouldn't be the trigger for dropping -Werror (even if BeOS is the only
+       target where GCC2 is likely to be used).
+  - Reverted r8979, managed to correct my system headers, for now...
+  - Sorry, but -Werror on gcc2 is asking for trouble here...
+  - Ensure local include path overrides buildsystem settings.
+  - Keep a record of the amount of memory consumed by a lwc_context.
+  - Guarantee to NUL-terminate interned strings.
+
+ -- John Mark Bell <jmb@netsurf-browser.org>  Thu Apr 7 2011 08:17:26 +0000

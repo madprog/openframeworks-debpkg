@@ -1,0 +1,65 @@
+libhubbub (0.3.5) stable; urgency=medium
+
+  - Tests: Squash leaked chunks allocations.
+  - Tests: Squash leak of hubbub parser.
+       Found by address sanitizer.
+  - Tests: Fix passing NULL to qsort.
+       test/tree2.c:882:3: runtime error: null pointer passed as argument 1,
+       which is declared to never be null
+  - Tests: Squash json object leak in tests.
+  - Tests: Squash implicit fallthrough error.
+       test/tree2.c:239:10: error: this statement may fall through
+       [-Werror=implicit-fallthrough=]
+
+ -- Vincent Sanders <vince@kyllikki.org>  Wed, 22 Aug 2018 14:31:02 +0100
+
+libhubbub (0.3.4) stable; urgency=medium
+
+  - Support falling back to space separated charset
+       In some cases, for example, Apple Mail, programs generate HTML
+       with apallingly bad meta tags such as:
+
+           <meta content="text/html charset=utf-8">
+
+       This is bad because *a* no http-equiv="Content-Type" and *b* because
+       the content type and charset do not have a separating semi-colon.
+
+       Sadly, Chrome et-al support this, so we need to in Hubbub.  This
+       change adjusts the content="" parser to retry if it cannot find
+       a semicolon, and work forwards to first whitespace instead.
+
+       Fixes: #2549
+
+ -- Vincent Sanders <vince@kyllikki.org>  Fri, 13 Oct 2017 09:46:05 +0100
+
+libhubbub (0.3.3) stable; urgency=medium
+
+  - make unused variable macro more portable
+
+ -- Vincent Sanders <vince@kyllikki.org>  Tue, 16 Feb 2016 10:48:07 +0000
+
+libhubbub (0.3.2) stable; urgency=medium
+
+  - Fix doxygen warnings
+  - Update doxygen config ready for automatic document generation
+  - Update CFLAGS to avoid deprication warning for glibc 2.21 and later.
+  - The json library used for tests has changed name. Closes #2191
+  - Fix include dirs for Haiku.
+
+ -- Vincent Sanders <vince@kyllikki.org>  Fri, 18 Dec 2015 11:29:57 +0000
+
+libhubbub (0.3.1) stable; urgency=medium
+
+  - Fix up for new buildsystem. Remove unused compat hacks.
+  - strncasecmp definition is in strings.h which was not being included
+
+ -- Vincent Sanders <vince@kyllikki.org>  Sun, 8 Mar 2015 20:52:24 +0000
+
+libhubbub (0.3.0) stable; urgency=medium
+
+  - add support for multilib
+  - Remove client allocation function and update for new lpu API.
+  - Correct various warnings in the test suite
+  - Don't use the nonportable alloca() during tests.
+
+ -- Vincent Sanders <vince@kyllikki.org>  Fri, 18 Apr 2014 10:49:06 +0100

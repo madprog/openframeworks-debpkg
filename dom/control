@@ -1,0 +1,18 @@
+Source: libdom
+Priority: optional
+Maintainer: Paul Morelle <paul@scengrafics.com>
+Build-Depends: debhelper (>= 9),
+ check,
+ libhubbub-dev,
+ libparserutils-dev,
+ libswitch-perl,
+ libxml-perl
+Standards-Version: 3.9.8
+Section: libs
+Homepage: http://git.netsurf-browser.org/libdom.git/
+
+Package: libdom-dev
+Section: libdevel
+Architecture: any
+Description: Document Object Model library
+ LibDOM is an implementation of the W3C DOM API in C.

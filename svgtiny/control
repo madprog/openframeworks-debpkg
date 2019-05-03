@@ -1,0 +1,15 @@
+Source: libsvgtiny
+Priority: optional
+Maintainer: Paul Morelle <paul@scengrafics.com>
+Build-Depends: debhelper (>= 9),
+ gperf,
+ libdom-dev,
+ libwapcaplet-dev
+Standards-Version: 3.9.8
+Section: libs
+Homepage: http://git.netsurf-browser.org/libsvgtiny.git/
+
+Package: libsvgtiny-dev
+Section: libdevel
+Architecture: any
+Description: NetSurf SVG decoder

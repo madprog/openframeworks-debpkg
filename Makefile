@@ -323,7 +323,26 @@ ${SVGTINY_ORIG_PKG}: always
 
 # TESS2
 
-${TESS2_PKG}:
+TESS2_URL=https://github.com/memononen/libtess2/archive/master.tar.gz
+TESS2_SHA256=4449859ff747b1061b6831d35e0491bbf1851e0b03619eefddc6139160cec3a0
+TESS2_ORIG_PKG=libtess2-${TESS2_VERSION}.orig.tar.gz
+${TESS2_PKG}: ${TESS2_ORIG_PKG} \
+              tess2/changelog \
+              tess2/compat \
+              tess2/control \
+              tess2/libtess2-dev.install \
+              tess2/rules
+	rm -rf $(TESS2_ORIG_PKG:%.orig.tar.gz=%)
+	tar xzf ${TESS2_ORIG_PKG}
+	mv "$$(tar tzf ${TESS2_ORIG_PKG} | head -n1 | cut -d/ -f1)" "$(TESS2_ORIG_PKG:%.orig.tar.gz=%)"
+	cd "$(TESS2_ORIG_PKG:%.orig.tar.gz=%)" && ln -s ../tess2 debian
+	cd "$(TESS2_ORIG_PKG:%.orig.tar.gz=%)" && dpkg-buildpackage -b -uc
+
+${TESS2_ORIG_PKG}: always
+	[ -e "$@" ] && $(call check_sha,${TESS2_SHA256},$@) || { \
+		rm -f "$@" && \
+		wget -O "$@" ${TESS2_URL} && \
+		$(call check_sha,${TESS2_SHA256},$@) || { rm $@ && false; }; }
 
 # UTF8
 

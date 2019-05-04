@@ -14,6 +14,9 @@ run apt-get update && apt-get install -y --no-install-recommends \
         gperf \
         graphviz \
         libexpat1-dev \
+        libglew-dev \
+        libglfw3-dev \
+        libglu1-mesa-dev \
         libjson-c-dev \
         libpcre3-dev \
         libsqlite3-dev \
@@ -22,6 +25,7 @@ run apt-get update && apt-get install -y --no-install-recommends \
         libxml-perl \
         libxml-xpath-perl \
         pkg-config \
+        premake4 \
         python3 \
         re2c \
         sudo \

@@ -1,0 +1,14 @@
+libtess2 (1.0.1) stable; urgency=medium
+
+  This release contain several bug fixes over the original libtess2 release on
+  Google Code.
+
+  - Fixed uninitialized variable: outOfMemory
+  - Added support for detecting original vertex indices
+  - Fixed a crash bug in case the whole input is colinear
+  - Changed internal include paths to ease compiling on multiple platforms
+
+  It is recommended to update to this version if you were previously using the
+  download from Google Code.
+
+ -- Mikko Mononen <memononen@gmail.com>  Wed, 11 Sep 2013 23:52:59 +0200
